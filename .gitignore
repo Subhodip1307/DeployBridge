@@ -1,3 +1,5 @@
 /target
 *.sh
 *.txt
+config.toml
+systemmd
