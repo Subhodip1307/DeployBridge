@@ -53,7 +53,7 @@ pub struct Main {
 pub struct Config {
     pub main: Main,
     #[serde(rename="R")]
-    pub projects: HashMap<String, Bashinfo>,
+    pub projects: Option<HashMap<String, Bashinfo>>,
 }
 #[derive(Debug, Deserialize)]
 pub struct Bashinfo {

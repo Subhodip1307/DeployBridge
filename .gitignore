@@ -3,3 +3,4 @@
 *.txt
 config.toml
 systemmd
+!install.sh

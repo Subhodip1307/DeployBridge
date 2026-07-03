@@ -24,7 +24,6 @@ async fn main() {
     println!("Runing Version {}", env!("CARGO_PKG_VERSION"));
     // setting values to the variables
     set_values().await;
-    println!("new hasmpa is {:?}",PROJECTS.get());
     let (tx, rx) = mpsc::channel::<String>(10);
     tokio::spawn(async move {
         worker(rx).await;
@@ -33,7 +32,7 @@ async fn main() {
         .route("/", get(|| async { "runing" }))
         .route(&format!("/{}",option_env!("url_path").unwrap_or("send")), post(docker_view))
         .with_state(tx);
-    let addr: SocketAddr = "0.0.0.0:8000".parse().unwrap();
+    let addr: SocketAddr = "127.0.0.14:8000".parse().unwrap();
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
@@ -103,14 +102,19 @@ async fn set_values(){
     let load_config:Result<Config, toml::de::Error>=toml::from_str(&file_data);
 
     match load_config {
-       Err(e)=>{ println!("erro 2is {}",e);return },
+       Err(e)=>{ println!("Config File Not found {}",e);return },
         Ok(v)=>{
             println!("setting value");
             let _=DEV.set(v.main.dev);
             let _=ORG.set(v.main.org);
             let _=TAG.set(v.main.tag);
             // now setting hashmap 
-            let e=PROJECTS.set(v.projects);
+            let e=PROJECTS.set(
+                match v.projects {
+                    Some(v)=>v,
+                    None=>HashMap::default()
+                }
+            );
             match e {
                 Err(err)=>println!("err is {:?}",err),
                 _=>{}
