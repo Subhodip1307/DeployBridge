@@ -114,7 +114,6 @@ async fn set_values() {
     match load_config {
         Err(e) => {
             println!("Config File Not found {}", e);
-            return;
         }
         Ok(v) => {
             println!("setting value");
@@ -122,14 +121,8 @@ async fn set_values() {
             let _ = ORG.set(v.main.org);
             let _ = TAG.set(v.main.tag);
             // now setting hashmap
-            let e = PROJECTS.set(match v.projects {
-                Some(v) => v,
-                None => HashMap::default(),
-            });
-            match e {
-                Err(err) => println!("err is {:?}", err),
-                _ => {}
-            }
+            let e = PROJECTS.set(v.projects.unwrap_or_default());
+            if let Err(err) = e { println!("err is {:?}", err) }
         }
     }
 }
