@@ -28,7 +28,7 @@ pub struct DockerPayload {
 }
 impl DockerPayload {
     pub fn is_deployble(&self) -> bool {
-        let org=ORG.get().unwrap();
+        let org = ORG.get().unwrap();
         &self.push_data.tag == TAG.get().unwrap()
             && &self.push_data.pusher == DEV.get().unwrap()
             && self.repository.is_private
@@ -52,20 +52,20 @@ pub struct Main {
 #[derive(Debug, Deserialize)]
 pub struct Config {
     pub main: Main,
-    #[serde(rename="R")]
+    #[serde(rename = "R")]
     pub projects: Option<HashMap<String, Bashinfo>>,
 }
 #[derive(Debug, Deserialize)]
 pub struct Bashinfo {
-    pub repo:String,
+    pub repo: String,
     pub path: String,
     pub shahash: String,
 }
 impl Bashinfo {
-    pub fn get_repo(&self)->&str{
+    pub fn get_repo(&self) -> &str {
         &self.repo
     }
-    pub fn get_path(&self)->&str{
+    pub fn get_path(&self) -> &str {
         &self.path
     }
 }
